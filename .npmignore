@@ -1,0 +1,22 @@
+# Sorgenti non necessari
+src/
+test/
+examples/
+scripts/
+
+# Config
+tsconfig.json
+tsconfig.*.json
+*.config.js
+*.config.ts
+*.config.cjs
+
+# File di sistema
+.vscode/
+.idea/
+*.log
+
+# Dev output
+coverage/
+node_modules/
+dist/*.map

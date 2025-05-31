@@ -1,0 +1,30 @@
+# Output
+dist/
+build/
+.cache/
+.nuxt/
+
+# Node
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# System
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs
+*.log
+*.log.*
+
+# Tests/coverage
+coverage/
+*.test.ts
+*.spec.ts
+
+# Env
+.env
+.env.*

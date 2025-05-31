@@ -1,0 +1,49 @@
+{
+  "name": "nuxt3-bot-handler",
+  "version": "1.0.0-beta",
+  "description": "🛡️ Nuxt 3 middleware to block suspicious bots, protect SEO crawlers with reverse DNS checks, and enforce User-Agent rules.",
+  "main": "dist/middleware.js",
+  "types": "dist/middleware.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/middleware.js",
+      "require": "./dist/middleware.js",
+      "types": "./dist/middleware.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "check:dist": "test -d dist && echo '✅ dist/ exists' || (echo '❌ dist/ missing. Run `npm run build`' && exit 1)",
+    "prepublishOnly": "npm run check:dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Anubiella/nuxt3-bot-handler"
+  },
+  "keywords": [
+    "nuxt",
+    "nuxt3",
+    "middleware",
+    "crawler",
+    "bot",
+    "protection",
+    "seo",
+    "dns",
+    "user-agent"
+  ],
+  "author": "Lorenzo Furno <https://github.com/Anubiella>",
+  "license": "MIT",
+  "devDependencies": {
+    "h3": "^1.9.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "nuxt": "^3.0.0",
+    "h3": "^1.9.0"
+  },
+  "type": "module"
+}
