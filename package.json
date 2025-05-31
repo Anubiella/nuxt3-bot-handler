@@ -22,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Anubiella/nuxt3-bot-handler"
+    "url": "git+https://github.com/Anubiella/nuxt3-bot-handler.git"
   },
   "keywords": [
     "nuxt",
