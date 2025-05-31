@@ -1,6 +1,6 @@
-# @Anubiella/nuxt3-bot-handler
+# nuxt3-bot-handler
 
-[![npm version](https://img.shields.io/npm/v/@Anubiella/nuxt3-bot-handler.svg?style=flat&color=blue)](https://www.npmjs.com/package/@Anubiella/nuxt3-bot-handler)
+[![npm version](https://img.shields.io/npm/v/nuxt3-bot-handler.svg?style=flat&color=blue)](https://www.npmjs.com/package/nuxt3-bot-handler)
 
 🛡️ A Nuxt 3 server middleware to detect and block suspicious bots, protect SEO integrity, and allow only verified crawlers using reverse DNS validation and user-agent structure analysis.
 
@@ -21,12 +21,12 @@
 
 ### With npm
 ```bash
-npm install @Anubiella/nuxt3-bot-handler
+npm install nuxt3-bot-handler
 ```
 
 ### With pnpm
 ```bash
-pnpm add @Anubiella/nuxt3-bot-handler
+pnpm add nuxt3-bot-handler
 ```
 
 ---
@@ -36,9 +36,9 @@ pnpm add @Anubiella/nuxt3-bot-handler
 In your Nuxt 3 project, add the middleware like this:
 
 ```ts
-// server/middleware/block-bots.ts
-import blockBots from '@Anubiella/nuxt3-bot-handler'
-export default blockBots
+// server/middleware/bot-handler.ts
+import botHandler from 'nuxt3-bot-handler'
+export default botHandler
 ```
 
 That's it — Nuxt will automatically run this middleware for every incoming request.
