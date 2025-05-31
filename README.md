@@ -1,6 +1,8 @@
 # nuxt3-bot-handler
 
 [![npm version](https://img.shields.io/npm/v/nuxt3-bot-handler.svg?style=flat&color=blue)](https://www.npmjs.com/package/nuxt3-bot-handler)
+[![license](https://img.shields.io/npm/l/nuxt3-bot-handler.svg?style=flat)](https://github.com/Anubiella/nuxt3-bot-handler/blob/master/LICENSE)
+[![downloads](https://img.shields.io/npm/dm/nuxt3-bot-handler.svg?style=flat)](https://www.npmjs.com/package/nuxt3-bot-handler)
 
 🛡️ A Nuxt 3 server middleware to detect and block suspicious bots, protect SEO integrity, and allow only verified crawlers using reverse DNS validation and user-agent structure analysis.
 
