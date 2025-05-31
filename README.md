@@ -16,6 +16,7 @@
 - Whitelists official crawlers (Googlebot, Bingbot, Twitterbot, Applebot, etc.)
 - Passes uptime checkers like `Uptime Kuma` safely
 - Easy plug-and-play in any Nuxt 3 project
+- **Customizable verbosity with options**
 
 ---
 
@@ -39,8 +40,15 @@ In your Nuxt 3 project, add the middleware like this:
 
 ```ts
 // server/middleware/bot-handler.ts
-import botHandler from 'nuxt3-bot-handler'
-export default botHandler
+import { createBotHandler } from 'nuxt3-bot-handler'
+
+export default createBotHandler({ verbose: true })
+```
+
+Or for minimal logging:
+
+```ts
+export default createBotHandler({ verbose: false })
 ```
 
 That's it — Nuxt will automatically run this middleware for every incoming request.
@@ -66,14 +74,8 @@ This middleware performs the following checks:
 5. **Structural Checks on User-Agent**  
    Denies clients with flat or malformed User-Agent strings, unless explicitly allowlisted
 
----
-
-## ⚙️ Configuration (coming soon)
-
-In future versions, this package will support:
-- IP or User-Agent allowlists/blacklists
-- Rate limiting per bot/IP
-- Logging hooks for custom tracking
+6. **Verbose Option for Logging**  
+   Toggle detailed console logging using the `verbose: true|false` option
 
 ---
 
