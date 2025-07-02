@@ -66,7 +66,10 @@ This middleware performs the following checks:
    Matches against a list of known bot/scraper patterns (`axios`, `wget`, `headlesschrome`, etc.)
 
 3. **DNS Reverse Lookup for SEO bots**  
-   Verifies that the IP address belongs to the official domain of bots (e.g., `Googlebot` must resolve to `*.googlebot.com`)
+   Verifies that the IP address belongs to the official domain of bots (e.g., Googlebot must resolve to *.googlebot.com) using dns.reverse().
+   If the DNS reverse lookup fails due to network issues or unresolvable hostnames, the request is blocked to avoid spoofing.
+   However, if the error is caused by unsupported functionality (e.g., "Not implemented: cares.ChannelWrap.prototype.getHostByAddr"), the lookup is skipped, and a warning is logged (if verbose mode is enabled), without blocking the request.
+   This prevents false positives in restricted environments such as edge runtimes or some serverless deployments.
 
 4. **Bypasses for Facebook and Meta IPs**  
    Allows Facebook crawlers with specific IPv4/IPv6 prefixes even without reverse DNS

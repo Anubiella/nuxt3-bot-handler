@@ -115,8 +115,25 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
               return
             }
           } catch (err: any) {
+            const isBotInCrawlerChecks = crawlerChecks.some(({ agent }) => agent.test(userAgent))
+
+            if (err.message?.includes('Not implemented') && isBotInCrawlerChecks) {
+              if (options.verbose) {
+                console.log('⚠️ DNS reverse lookup skipped: Not implemented for known crawler', {
+                  ip,
+                  userAgent,
+                  error: err.message,
+                })
+              }
+              return
+            }
+
             if (options.verbose) {
-              console.log('❌ DNS reverse lookup fallito:', { ip, userAgent, error: err.message })
+              console.log('❌ DNS reverse lookup fallito:', {
+                ip,
+                userAgent,
+                error: err.message,
+              })
             }
             event.node.res.statusCode = 403
             event.node.res.statusMessage = 'Forbidden'
