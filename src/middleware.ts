@@ -56,7 +56,7 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
       { agent: /Slurp/i, hostnames: ['.crawl.yahoo.net'] },
       { agent: /DuckDuckBot/i, hostnames: ['.duckduckgo.com'] },
       { agent: /YandexBot/i, hostnames: ['.yandex.com', '.yandex.ru'] },
-      { agent: /SemrushBot/i, hostnames: ['.bot.semrush.com'] },
+      { agent: /SemrushBot/i, hostnames: ['.bot.semrush.com', '.semrush.com'] },
       { agent: /Screaming Frog SEO Spider/i, hostnames: ['.screamingfrog.co.uk'] },
       { agent: /Applebot/i, hostnames: ['.applebot.apple.com'] },
       { agent: /Twitterbot/i, hostnames: ['.twitter.com'] },
