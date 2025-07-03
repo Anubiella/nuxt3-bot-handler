@@ -19,7 +19,7 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
     const ip =
       req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ||
       req.socket.remoteAddress ||
-      'IP sconosciuto'
+      'Unknown IP'
 
     const userAgent = req.headers['user-agent'] || ''
 
@@ -33,11 +33,11 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
 
     if (isEmptyUA || isTooShortUA || isGenericUA) {
       if (options.verbose) {
-        console.log('🚫 User-Agent sospetto per struttura:', { ip, userAgent })
+        console.log('🚫 Suspicious User-Agent structure:', { ip, userAgent })
       }
       event.node.res.statusCode = 403
       event.node.res.statusMessage = 'Forbidden'
-      event.node.res.end('Accesso negato: User-Agent non valido')
+      event.node.res.end('Access denied: Invalid User-Agent')
       return
     }
 
@@ -77,11 +77,11 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
 
     if (lacksStructureUA && !isAllowedBot) {
       if (options.verbose) {
-        console.log('🚫 User-Agent con struttura anomala:', { ip, userAgent })
+        console.log('🚫 Anomalous User-Agent structure:', { ip, userAgent })
       }
       event.node.res.statusCode = 403
       event.node.res.statusMessage = 'Forbidden'
-      event.node.res.end('Accesso negato: User-Agent anomalo')
+      event.node.res.end('Access denied: Anomalous User-Agent')
       return
     }
 
@@ -93,12 +93,12 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
       (isMetaIPv6 || isMetaIPv4)
     ) {
       if (options.verbose) {
-        console.log('✅ Meta IP bypass DNS:', { ip, userAgent })
+        console.log('✅ Meta IP DNS bypass allowed:', { ip, userAgent })
       }
       return
     }
 
-    if (ip !== 'IP sconosciuto') {
+    if (ip !== 'Unknown IP') {
       for (const { agent, hostnames } of crawlerChecks) {
         if (agent.test(userAgent)) {
           if (!hostnames.length) return
@@ -107,29 +107,24 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
             const valid = hostnamesResolved.some(hn => hostnames.some(suffix => hn.endsWith(suffix)))
             if (!valid) {
               if (options.verbose) {
-                console.log('🛑 Fake crawler intercettato:', { ip, userAgent, hostnamesResolved })
+                console.log('🛑 Fake crawler detected:', { ip, userAgent, hostnamesResolved })
               }
               event.node.res.statusCode = 403
               event.node.res.statusMessage = 'Forbidden'
-              event.node.res.end('Accesso negato a bot sospetti')
+              event.node.res.end('Access denied: Suspicious bot')
               return
             }
           } catch (err: any) {
             const isBotInCrawlerChecks = crawlerChecks.some(({ agent }) => agent.test(userAgent))
+            const errMsg = String(err?.message || err).toLowerCase()
 
-            if (err.message?.includes('Not implemented') && isBotInCrawlerChecks) {
-              if (options.verbose) {
-                console.log('⚠️ DNS reverse lookup skipped: Not implemented for known crawler', {
-                  ip,
-                  userAgent,
-                  error: err.message,
-                })
-              }
+            if (errMsg.includes('not implemented') && isBotInCrawlerChecks) {
+              // Soft fallback for environments like unenv/serverless
               return
             }
 
             if (options.verbose) {
-              console.log('❌ DNS reverse lookup fallito:', {
+              console.log('❌ DNS reverse lookup failed:', {
                 ip,
                 userAgent,
                 error: err.message,
@@ -137,7 +132,7 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
             }
             event.node.res.statusCode = 403
             event.node.res.statusMessage = 'Forbidden'
-            event.node.res.end('Accesso negato a bot sospetti')
+            event.node.res.end('Access denied: Suspicious bot')
             return
           }
         }
@@ -146,11 +141,11 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
 
     if (isSuspiciousBot) {
       if (options.verbose) {
-        console.log('🤖 Bot sospetto intercettato:', { ip, userAgent })
+        console.log('🤖 Suspicious bot detected:', { ip, userAgent })
       }
       event.node.res.statusCode = 403
       event.node.res.statusMessage = 'Forbidden'
-      event.node.res.end('Accesso negato ai bot sospetti')
+      event.node.res.end('Access denied: Suspicious bot')
       return
     }
   })
