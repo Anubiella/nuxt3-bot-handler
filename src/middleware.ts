@@ -63,7 +63,9 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
       { agent: /facebot/i, hostnames: ['.facebook.com'] },
       { agent: /facebookexternalhit/i, hostnames: ['.facebook.com'] },
       { agent: /meta-externalagent/i, hostnames: ['.facebook.com'] },
-      { agent: /ChatGPT-User/i, hostnames: [] }
+      { agent: /ChatGPT-User/i, hostnames: [] },
+      { agent: /Cookiebot/i, hostnames: []},
+      { agent: /Greenflare/i, hostnames: []}
     ]
 
     const allowlistedBots = crawlerChecks.map(c => c.agent).concat([/uptime-kuma/i])

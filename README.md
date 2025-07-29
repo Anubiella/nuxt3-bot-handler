@@ -97,6 +97,8 @@ The middleware allows through these bots after DNS check:
 - Twitterbot
 - facebot / facebookexternalhit / meta-externalagent
 - uptime-kuma
+- Cookiebot
+- Greenflare
 
 ---
 
