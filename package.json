@@ -1,6 +1,6 @@
 {
   "name": "nuxt3-bot-handler",
-  "version": "1.0.6-beta",
+  "version": "1.0.7-beta",
   "description": "🛡️ Nuxt 3 middleware to block suspicious bots, protect SEO crawlers with reverse DNS checks, and enforce User-Agent rules.",
   "main": "dist/middleware.js",
   "types": "dist/middleware.d.ts",

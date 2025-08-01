@@ -52,6 +52,7 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
 
     const crawlerChecks = [
       { agent: /Googlebot/i, hostnames: ['.googlebot.com', '.google.com'] },
+      { agent: /AdsBot-Google/i, hostnames: [] },
       { agent: /Bingbot/i, hostnames: ['.search.msn.com'] },
       { agent: /Slurp/i, hostnames: ['.crawl.yahoo.net'] },
       { agent: /DuckDuckBot/i, hostnames: ['.duckduckgo.com'] },

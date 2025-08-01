@@ -87,6 +87,7 @@ This middleware performs the following checks:
 The middleware allows through these bots after DNS check:
 
 - Googlebot
+- AdsBot-Google
 - Bingbot
 - DuckDuckBot
 - Yahoo Slurp
