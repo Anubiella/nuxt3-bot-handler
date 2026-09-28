@@ -100,6 +100,10 @@ The middleware allows through these bots after DNS check:
 - uptime-kuma
 - Cookiebot
 - Greenflare
+- OAI-SearchBot
+- Claude-SearchBot
+- Claude-User
+- Gemini-Deep-Research
 
 ---
 

@@ -66,6 +66,10 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
       { agent: /facebookexternalhit/i, hostnames: ['.facebook.com'] },
       { agent: /meta-externalagent/i, hostnames: ['.facebook.com'] },
       { agent: /ChatGPT-User/i, hostnames: [] },
+      { agent: /OAI-SearchBot/i, hostnames: [] },
+      { agent: /Claude-SearchBot/i, hostnames: [] },
+      { agent: /Claude-User/i, hostnames: [] },
+      { agent: /Gemini-Deep-Research/i, hostnames: [] },
       { agent: /Cookiebot/i, hostnames: []},
       { agent: /Greenflare/i, hostnames: []}
     ]
