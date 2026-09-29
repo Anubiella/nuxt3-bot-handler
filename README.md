@@ -53,11 +53,41 @@ export default createBotHandler({ verbose: false })
 
 That's it — Nuxt will automatically run this middleware for every incoming request.
 
+### Client IP header
+
+By default the client IP is read from `x-forwarded-for`, then the socket address. If your host sets a trusted header with the real client IP, pass it with `ipHeader`:
+
+```ts
+createBotHandler({ ipHeader: 'x-nf-client-connection-ip' }) // Netlify
+createBotHandler({ ipHeader: 'cf-connecting-ip' })          // Cloudflare
+```
+
+Only use a header your platform overwrites on every request, otherwise clients can spoof it.
+
+### Blocking vulnerability scanners
+
+Requests probing for secrets or other stacks' admin pages (`/.env`, `/.env.local`, `/.git/config`, `/wp-login.php`, `/phpmyadmin`, `*.php`, `*.sql`, …) are rejected with `403` before any other check, whatever the User-Agent. `/.well-known/` is never blocked.
+
+To add your own paths, extend the defaults (strings match as a path prefix, RegExps are tested against the pathname):
+
+```ts
+import { createBotHandler, defaultBlockedPaths } from 'nuxt3-bot-handler'
+
+export default createBotHandler({
+  blockedPaths: [...defaultBlockedPaths, '/old-admin', /\/backup\//i],
+})
+```
+
+Passing `blockedPaths` without spreading `defaultBlockedPaths` replaces the defaults; `blockedPaths: []` disables the check.
+
 ---
 
 ## 🔍 How It Works
 
 This middleware performs the following checks:
+
+0. **Blocked Path Probes**  
+   Rejects requests for `.env` files, VCS folders, WordPress/PHP entry points and similar scanner targets
 
 1. **User-Agent Validation**  
    Blocks missing, too short, or generic user-agents (like "test", "curl", etc.)
@@ -84,26 +114,31 @@ This middleware performs the following checks:
 
 ## ✅ Whitelisted Crawlers
 
-The middleware allows through these bots after DNS check:
+**Verified via reverse DNS** — allowed only if the IP resolves to the bot's official domain:
 
 - Googlebot
-- AdsBot-Google
 - Bingbot
 - DuckDuckBot
 - Yahoo Slurp
 - YandexBot
 - Applebot
 - SemrushBot
+- SiteAuditBot (Semrush)
 - Screaming Frog SEO Spider
 - Twitterbot
-- facebot / facebookexternalhit / meta-externalagent
-- uptime-kuma
-- Cookiebot
-- Greenflare
+- facebot / facebookexternalhit / meta-externalagent (also allowed without DNS from known Meta IP ranges)
+
+**Allowed by User-Agent only** — no DNS verification, so a spoofed User-Agent will pass:
+
+- AdsBot-Google
+- ChatGPT-User
 - OAI-SearchBot
 - Claude-SearchBot
 - Claude-User
 - Gemini-Deep-Research
+- Cookiebot
+- Greenflare
+- uptime-kuma
 
 ---
 

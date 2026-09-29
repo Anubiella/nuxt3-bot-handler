@@ -7,19 +7,72 @@ import type { H3Event } from 'h3'
 
 export interface BotHandlerOptions {
   verbose?: boolean
+  /**
+   * Paths that are always rejected, whatever the User-Agent.
+   * Strings match as a case-insensitive path prefix, RegExps are tested against the pathname.
+   * Replaces the defaults: spread `defaultBlockedPaths` to extend them.
+   */
+  blockedPaths?: (string | RegExp)[]
+  /**
+   * Header your host sets to the real client IP (e.g. 'x-nf-client-connection-ip' on Netlify,
+   * 'cf-connecting-ip' on Cloudflare). Only set it if the platform overwrites the header,
+   * otherwise clients can spoof it. Falls back to x-forwarded-for, then the socket address.
+   */
+  ipHeader?: string
 }
 
-export const createBotHandler = (options: BotHandlerOptions = {}) =>
-  defineEventHandler(async (event: H3Event) => {
+// Probes for secrets, VCS metadata and other stacks' admin/entry points.
+// Never legitimate on a Nuxt site. `/.well-known/` is intentionally not covered.
+export const defaultBlockedPaths: RegExp[] = [
+  /(^|\/)\.env/i,
+  /(^|\/)\.(git|svn|hg|aws|ssh|docker|vscode|idea)(\/|$)/i,
+  /(^|\/)\.(htaccess|htpasswd|npmrc|DS_Store)$/i,
+  /(^|\/)wp-(admin|login|content|includes|config)/i,
+  /(^|\/)(phpmyadmin|pma|cgi-bin|server-status|xmlrpc\.php)(\/|$)/i,
+  /(^|\/)vendor\/phpunit\//i,
+  /\.(php\d?|asp|aspx|jsp|cgi|sql|bak|old|swp)$/i,
+]
+
+const getPathname = (url: string) => {
+  const path = url.split('?')[0].split('#')[0]
+  try {
+    return decodeURIComponent(path)
+  } catch {
+    return path
+  }
+}
+
+export const createBotHandler = (options: BotHandlerOptions = {}) => {
+  const blockedPaths = options.blockedPaths ?? defaultBlockedPaths
+
+  return defineEventHandler(async (event: H3Event) => {
     const req = event.node.req
     const url = req.url || ''
 
-    if (url.startsWith('/api/health') || url.startsWith('/api/sitemap')) return
-
     const ip =
+      (options.ipHeader && req.headers[options.ipHeader.toLowerCase()]?.toString().split(',')[0]?.trim()) ||
       req.headers['x-forwarded-for']?.toString().split(',')[0]?.trim() ||
       req.socket.remoteAddress ||
       'Unknown IP'
+
+    const pathname = getPathname(url)
+    const isBlockedPath = blockedPaths.some(p =>
+      typeof p === 'string'
+        ? pathname.toLowerCase().startsWith(p.toLowerCase())
+        : p.test(pathname)
+    )
+
+    if (isBlockedPath) {
+      if (options.verbose) {
+        console.log('🚫 Blocked path probe:', { ip, url })
+      }
+      event.node.res.statusCode = 403
+      event.node.res.statusMessage = 'Forbidden'
+      event.node.res.end('Access denied')
+      return
+    }
+
+    if (url.startsWith('/api/health') || url.startsWith('/api/sitemap')) return
 
     const userAgent = req.headers['user-agent'] || ''
 
@@ -157,5 +210,6 @@ export const createBotHandler = (options: BotHandlerOptions = {}) =>
       return
     }
   })
+}
 
 export default createBotHandler()
